@@ -1,9 +1,10 @@
-type Todo {
-  id: ID!
-  name: String
-  description: String
+type Product {
+  productId: ID!
+  Price: Float
+  Title: String
+  URL: String
 }
 
 type Query {
-  getTodo(id: ID!): Todo
+  getProduct(productId: ID!): Product
 }
