@@ -26,7 +26,6 @@ export class MyAppsyncDynamodbStack extends cdk.Stack {
       ],
     });
     
-
     // AppSync APIの作成
     const api = new appsync.GraphqlApi(this, 'Api', {
       name: 'my-api',
@@ -48,8 +47,8 @@ export class MyAppsyncDynamodbStack extends cdk.Stack {
     // リゾルバーの追加 (例: Query.getTodo)
     dataSource.createResolver('QueryGetDemosResolver', {
       typeName: 'Query',
-      fieldName: 'getTodo',
-      requestMappingTemplate: appsync.MappingTemplate.dynamoDbGetItem('id', 'id'),
+      fieldName: 'getProduct',
+      requestMappingTemplate: appsync.MappingTemplate.dynamoDbGetItem('productId', 'productId'),
       responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultItem(),
     });
 

@@ -12,3 +12,16 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 * `npx cdk deploy`  deploy this stack to your default AWS account/region
 * `npx cdk diff`    compare deployed stack with current state
 * `npx cdk synth`   emits the synthesized CloudFormation template
+
+## Sample
+```shell
+aws dynamodb put-item \
+    --table-name Product \
+    --item '{
+        "productId": {"S": "EXAMPLE123"},
+        "Price": {"N": "100.0"},
+        "Title": {"S": "Sample Product"},
+        "URL": {"S": "https://example.com/product/1"}
+    }' \
+    --return-consumed-capacity TOTAL
+```
