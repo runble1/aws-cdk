@@ -1,99 +1,68 @@
-import { SignatureV4 } from "@aws-sdk/signature-v4";
-import { Sha256 } from "@aws-crypto/sha256-js";
-import { defaultProvider } from "@aws-sdk/credential-provider-node";
-import { HttpRequest } from "@aws-sdk/protocol-http";
+// handler.ts
+import { executeGraphqlRequest } from "./graphqlRequest"; // 分割したモジュールをインポート
 
-const region = "ap-northeast-1";
 const graphqlEndpoint = process.env.APPSYNC_ENDPOINT || "";
 
-const mutation = JSON.stringify({
-  query: `mutation PutProduct {
-    putProduct(productId: "EXAMPLE123", title: "Example Product", url: "https://example.com/product", category: "Example Category", lowPrice: 100) {
-      productId
-      title
-      url
-      category
-      lowPrice
-    }
-  }`,
-});
-
-const query = JSON.stringify({
-  query: `query GetProduct {
-    getProduct(productId: "EXAMPLE123") {
-      productId
-      title
-      url
-      category
-      lowPrice
-    }
-  }`,
-});
-
 export async function handler() {
-  const fetch = (await import("node-fetch")).default;
-  const endpointUrl = new URL(graphqlEndpoint);
-  const signer = new SignatureV4({
-    credentials: defaultProvider(),
-    region: region,
-    service: "appsync",
-    sha256: Sha256,
+  const timestamp = new Date().toISOString();
+
+  // Put Product Mutation
+  const productMutationBody = JSON.stringify({
+    query: `mutation PutProduct {
+      putProduct(productId: "EXAMPLE123", title: "Example Product", url: "https://example.com/product", category: "Example Category", lowPrice: 100) {
+        productId
+        title
+        url
+        category
+        lowPrice
+      }
+    }`,
   });
 
-  // Mutationのリクエストを準備
-  const mutationRequest = new HttpRequest({
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Host": endpointUrl.hostname,
-    },
-    hostname: endpointUrl.hostname,
-    path: endpointUrl.pathname,
-    body: mutation,
+  await executeGraphqlRequest(productMutationBody, graphqlEndpoint);
+
+  // Put History Mutation
+  const historyMutationBody = JSON.stringify({
+    query: `mutation PutHistory {
+      putHistory(productId: "EXAMPLE123", checkTimestamp: "${timestamp}", price: 100) {
+        productId
+        checkTimestamp
+        price
+      }
+    }`,
   });
 
-  const signedMutationRequest = await signer.sign(mutationRequest);
+  await executeGraphqlRequest(historyMutationBody, graphqlEndpoint);
 
-  // Mutationを実行
-  await fetch(endpointUrl.toString(), {
-    method: signedMutationRequest.method,
-    headers: {
-      ...signedMutationRequest.headers,
-      "host": endpointUrl.hostname
-    },
-    body: signedMutationRequest.body,
+  // Get Product Query
+  const productQueryBody = JSON.stringify({
+    query: `query GetProduct {
+      getProduct(productId: "EXAMPLE123") {
+        productId
+        title
+        url
+        category
+        lowPrice
+      }
+    }`,
   });
 
-  // Queryのリクエストを準備
-  const request = new HttpRequest({
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Host": endpointUrl.hostname,
-    },
-    hostname: endpointUrl.hostname,
-    path: endpointUrl.pathname,
-    body: query,
+  const productData = await executeGraphqlRequest(productQueryBody, graphqlEndpoint);
+  console.log("Product Data retrieved from AppSync:", productData);
+
+  // Get History Query
+  const historyQueryBody = JSON.stringify({
+    query: `query GetHistory {
+      getHistory(productId: "EXAMPLE123", from: "${timestamp}", to: "${timestamp}") {
+        productId
+        checkTimestamp
+        price
+      }
+    }`,
   });
 
-  const signedRequest = await signer.sign(request);
+  const historyData = await executeGraphqlRequest(historyQueryBody, graphqlEndpoint);
+  console.log("History Data retrieved from AppSync:", historyData);
 
-  // Queryを実行
-  try {
-    const response = await fetch(endpointUrl.toString(), {
-      method: signedRequest.method,
-      headers: {
-        ...signedRequest.headers,
-        "host": endpointUrl.hostname
-      },
-      body: signedRequest.body,
-    });
-
-    const data = await response.json();
-    console.log("Data retrieved from AppSync:", data);
-    return data;
-  } catch (error) {
-    console.error("Error querying AppSync:", error);
-    throw new Error(`Error querying AppSync: ${error}`);
-  }
+  return { productData, historyData };
 }

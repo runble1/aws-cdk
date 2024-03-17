@@ -21,5 +21,11 @@ export class DynamoDbTables {
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
+
+    this.historyTable.addGlobalSecondaryIndex({
+      indexName: 'ProductIdIndex',
+      partitionKey: { name: 'productId', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'checkTimestamp', type: dynamodb.AttributeType.STRING },
+    });
   }
 }
