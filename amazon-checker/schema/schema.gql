@@ -1,6 +1,7 @@
 type Product {
   productId: ID!
   title: String
+  url: String
   category: String
   lowPrice: Float
 }
@@ -17,7 +18,7 @@ type Query {
 }
 
 type Mutation {
-  putProduct(productId: String!, Title: String, URL: String, Category: String, LowPrice: Float): Product
+  putProduct(productId: String!, title: String, url: String, category: String, lowPrice: Float): Product
   putHistory(productId: String!, checkTimestamp: String!, price: Float): History
 }
 

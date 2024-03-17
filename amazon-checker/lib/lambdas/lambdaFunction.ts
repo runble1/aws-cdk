@@ -11,7 +11,7 @@ export class MyLambdaFunction extends Construct {
     super(scope, id);
 
     this.function = new lambdaNodejs.NodejsFunction(this, 'Function', {
-      entry: 'functions/call-appsync/src/index.ts',
+      entry: 'functions/call-api/src/index.ts',
       handler: 'handler',
       runtime: lambda.Runtime.NODEJS_20_X,
       environment: {

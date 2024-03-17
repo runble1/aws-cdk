@@ -9,7 +9,7 @@ export class MyAppsyncDynamodbStack extends cdk.Stack {
     super(scope, id, props);
 
     const dynamoDbTables = new DynamoDbTables(this);
-    const appSyncApi = new AppSyncApi(this, dynamoDbTables.productTable);
+    const appSyncApi = new AppSyncApi(this, dynamoDbTables.productTable, dynamoDbTables.historyTable);
     const myLambdaFunction = new MyLambdaFunction(this, 'MyLambdaFunction', appSyncApi.api.graphqlUrl);
 
     // Lambda関数のURLを出力
