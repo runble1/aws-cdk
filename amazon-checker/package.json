@@ -1,5 +1,5 @@
 {
-  "name": "appsync-dynamo",
+  "name": "amazon-checker",
   "version": "0.1.0",
   "bin": {
     "appsync-dynamo": "bin/appsync-dynamo.js"
