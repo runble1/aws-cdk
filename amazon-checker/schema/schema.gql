@@ -5,6 +5,7 @@ type Product {
   category: String
   lowPrice: Float
 }
+
 type History {
   productId: ID!
   checkTimestamp: String!

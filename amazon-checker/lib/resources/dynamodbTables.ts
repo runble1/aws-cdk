@@ -13,5 +13,13 @@ export class DynamoDbTables {
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
+
+    this.historyTable = new dynamodb.Table(scope, 'HistoryTable', {
+      tableName: 'History',
+      partitionKey: { name: 'productId', type: dynamodb.AttributeType.STRING },
+      sortKey: { name: 'checkTimestamp', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
   }
 }
