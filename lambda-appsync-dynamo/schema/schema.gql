@@ -1,10 +1,20 @@
 type Product {
   productId: ID!
-  Price: Float
-  Title: String
-  URL: String
+  title: String
+  url: String
+  category: String
+  lowPrice: Float
 }
 
 type Query {
   getProduct(productId: ID!): Product
+}
+
+type Mutation {
+  putProduct(productId: String!, title: String, url: String, category: String, lowPrice: Float): Product
+}
+
+schema {
+  query: Query
+  mutation: Mutation
 }

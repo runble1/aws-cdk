@@ -4,6 +4,7 @@ import { Construct } from 'constructs';
 
 export class DynamoDbTables {
   public readonly productTable: dynamodb.Table;
+  public readonly historyTable: dynamodb.Table;
 
   constructor(scope: Construct) {
     this.productTable = new dynamodb.Table(scope, 'ProductTable', {
