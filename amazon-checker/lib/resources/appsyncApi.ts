@@ -30,7 +30,6 @@ export class AppSyncApi {
       responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultItem(),
     });
 
-    // Update Mutation Resolver for LowPrice
     dataSource.createResolver('MutationPutProduct', {
       typeName: 'Mutation',
       fieldName: 'putProduct',
@@ -42,10 +41,10 @@ export class AppSyncApi {
             "productId": $util.dynamodb.toDynamoDBJson($ctx.args.productId)
           },
           "attributeValues": {
-            "title": $util.dynamodb.toDynamoDBJson($ctx.args.Title),
-            "url": $util.dynamodb.toDynamoDBJson($ctx.args.URL),
-            "category": $util.dynamodb.toDynamoDBJson($ctx.args.Category),
-            "lowPrice": $util.dynamodb.toDynamoDBJson($ctx.args.LowPrice)
+            "title": $util.dynamodb.toDynamoDBJson($ctx.args.title),
+            "url": $util.dynamodb.toDynamoDBJson($ctx.args.url),
+            "category": $util.dynamodb.toDynamoDBJson($ctx.args.caategory),
+            "lowPrice": $util.dynamodb.toDynamoDBJson($ctx.args.lowPrice)
           }
         }
       `),
