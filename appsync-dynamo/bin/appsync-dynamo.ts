@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { MyAppsyncDynamodbStack } from '../lib/appsync-dynamo-stack';
+import { MyAppsyncDynamodbStack } from '../lib/appsyncDynamoStack';
 
 const app = new cdk.App();
 new MyAppsyncDynamodbStack(app, 'AppsyncDynamoStack', {
